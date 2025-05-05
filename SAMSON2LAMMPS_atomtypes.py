@@ -1,7 +1,7 @@
 import math
 import os
 
-out_dir='D:/LAMMPS/plate bearing/' # You can use forward slashes on Windows
+out_dir='D:/LAMMPS/plate bearing/'
 data_file_out='temp.txt' #this is a file that holds all the atoms before the header info is written to the final file which is another name down below
 output_data=os.path.join(out_dir,data_file_out)
 
@@ -137,8 +137,6 @@ for atom in atomIndexer:
     
     
 for key, value in atoms.items():
-    #print(key, '->', value, "/n")
-    
     atom_index_write = str(atoms[key].get('atom_count'))
     molecule_tag_write = atoms[key].get('part_num')
     atom_type_write = str(atoms[key].get('atom_type'))
