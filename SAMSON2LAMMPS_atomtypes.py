@@ -155,8 +155,6 @@ num_atom_types = len(num_atom_types_and_mass)/2
 print("number of atoms in structure is : ", atom_count)
 print("number of atoms types in structure is : ", num_atom_types)
 dimensions =  get_hi_and_low(0,0,0)
-print("box dimenstions", dimensions[0])
-
 #get the centroid of all the groups. Might really only be necessary for rotational fixes, but could have other uses. 
 for key, value in atoms.items():       
     this_atoms_group = atoms[key].get('group')
