@@ -1,0 +1,18 @@
+#This is using real units in LAMMPS with energy in kcal/mol, distances in Angstrom and angles in degrees
+
+#geometric mixing, atomtypes, epsilon, sigma
+pair_coeff 1 1 0.05 3.43 #CCLJ
+pair_coeff 2 2 0.06 2.65 #HHLJ
+#pair_coeff 3 3 0.05 3.43 #CCLJ
+#pair_coeff 4 4 0.06 2.65 #HHLJ
+#pair_coeff 5 5 0.05 3.43 #CCLJ
+
+#Morse bond stretching parameters D, alpha, r0, 
+
+bond_coeff 1 82.7 18 1.549  #CS-CS 
+bond_coeff 2 89.6 18 1.082  #CS-H 
+
+#harmonic angle parameters, energy kcal/mol, angle in degrees
+angle_coeff 3 66.00 109.500   #H-CS-H
+angle_coeff 2 80.00 109.500   #CS-CS-H
+angle_coeff 1 175.00 109.500   #CS-CS-CS #grok deep search puts it at 150-200 kcal/mol. 
