@@ -1,7 +1,7 @@
 import math
 import os
 
-out_dir='D:/LAMMPS/plate bearing/' # You can use forward slashes on Windows
+out_dir='D:/Diamond_Machine_Parts//Diamond_Machine_Parts/Classic Hydrocarbon Bearing/' #CHANGE THIS
 data_file_out='temp.txt' #this is a file that holds all the atoms before the header info is written to the final file which is another name down below
 output_data=os.path.join(out_dir,data_file_out)
 
@@ -72,11 +72,11 @@ def get_hi_and_low(x,y,z):
 # getNodes returns an indexer that contains all nodes corresponding to a NSL string
 # (e.g., all nodes called "anchor"), and [0] returns the first element of that indexer
 anchor = SAMSON.getNodes('"anchor"')[0] # the anchor node in the document
-rotz = SAMSON.getNodes('"rotz"')[0] # the rotz node in the document
+roty = SAMSON.getNodes('"roty"')[0] # the rotz node in the document
 
 
 anchorNodes = anchor.getGroupNodes() # the nodes in the anchor group
-rotzNodes = rotz.getGroupNodes() # the nodes in the rotz group
+rotyNodes = roty.getGroupNodes() # the nodes in the rotz group
 # find all atoms
 
 atomIndexer = SAMSON.getNodes('node.type atom')
@@ -119,8 +119,8 @@ for atom in atomIndexer:
                 num_atom_types_and_mass.append(str(atom_mass))            
 
    #Jig two, a rotational group   
-    elif rotzNodes.hasNode(atom):
-        group = 'rotz'    
+    elif rotyNodes.hasNode(atom):
+        group = 'roty'    
         if symbol == "C":
             atom_type = 5
             if atom_type not in num_atom_types_and_mass:
@@ -137,13 +137,12 @@ for atom in atomIndexer:
     
     
 for key, value in atoms.items():
-    #print(key, '->', value, "/n")
-    
     atom_index_write = str(atoms[key].get('atom_count'))
     molecule_tag_write = atoms[key].get('part_num')
     atom_type_write = str(atoms[key].get('atom_type'))
     x_cor_write = str(round(   atoms[key].get('x_position'),3)    )
     y_cor_write = str(round(   atoms[key].get('y_position'),3)    )
+    z_cor_write = str(round(   atoms[key].get('z_position'),3)    )
                       
     atom_data_line = atom_index_write + "   " + molecule_tag_write + "   "  + atom_type_write + "   " + x_cor_write + "000"+  "   " + y_cor_write + "000"+ "  " + z_cor_write + "000" + "\n" #the "000" were added for a quick test, needs to be formated correctly
     with open(output_data,'a') as new_data:
@@ -155,8 +154,6 @@ num_atom_types = len(num_atom_types_and_mass)/2
 print("number of atoms in structure is : ", atom_count)
 print("number of atoms types in structure is : ", num_atom_types)
 dimensions =  get_hi_and_low(0,0,0)
-print("box dimenstions", dimensions[0])
-
 #get the centroid of all the groups. Might really only be necessary for rotational fixes, but could have other uses. 
 for key, value in atoms.items():       
     this_atoms_group = atoms[key].get('group')
@@ -179,7 +176,7 @@ for jigs in group_list:
     z_centroid = round(Z_SUM/ATOM_NUM, 3)
     print(jigs, "centroid", x_centroid, y_centroid, z_centroid)    
     
-comment = "#habst_rotors" + "\n"
+comment = "hydrocarbon bearing" + "\n" #CHANGE THIS
 num_atoms = " " + str(atom_count) + " atoms" + "\n"
 atom_type_header = " " + str(int(num_atom_types)) + " atom types" + "\n"
 xhilo = "   "+ str(dimensions[0]) + "          "+ str(dimensions[1]) + "      "+ "xlo xhi"+  "\n"
@@ -188,7 +185,7 @@ zhilo = "   "+ str(dimensions[4]) + "          "+ str(dimensions[5]) + "      "+
 masses_header = " Masses" + "\n"
 atoms_header = " Atoms " + "#molecular"+ "\n"
 
-f = open('D:/LAMMPS/plate bearing/SAMSON_test.data', "a") 
+f = open('D:/Diamond_Machine_Parts//Diamond_Machine_Parts/Classic Hydrocarbon Bearing/Hydrocarbon_Bearing.data', "a") #CHANGE THIS
 #f = open(output_data, "a")
 f.write(comment)
 f.write("\n")
@@ -215,61 +212,3 @@ with open(output_data,'r') as atom_data:
         f.write(line_raw)
 f.close()
 os.remove(output_data)
-
-    
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-#comment = "#habst_rotors" + "\n"
-#num_atoms = " " + str(atom_count) + " atoms" + "\n"
-#atom_type_header = " " + str(int(num_atom_types)) + " atom types" + "\n"
-#xhilo = "   "+ str(X_low_pad) + "          "+ str(X_high_pad) + "      "+ "xlo xhi"+  "\n"
-#yhilo = "   "+ str(Y_low_pad) + "          "+ str(Y_high_pad) + "      "+ "ylo yhi"+  "\n"
-#zhilo = "   "+ str(Z_low_pad) + "          "+ str(Z_high_pad) + "      "+ "zlo zhi"+  "\n"
-#masses_header = " Masses" + "\n"
-#atoms_header = " Atoms " + "#molecular"+ "\n"
-
-#f = open('D:/LAMMPS/plate bearing/TEST.data', "a") 
-##f = open(output_data, "a")
-#f.write(comment)
-#f.write("\n")
-#f.write(num_atoms)
-#f.write("\n")
-#f.write(atom_type_header)
-#f.write("\n")
-#f.write(xhilo)
-#f.write(yhilo)
-#f.write(zhilo)
-#f.write("\n")
-#f.write(masses_header)
-#f.write("\n")
-
-#for items in range(0, len(num_atom_types_and_mass), 2):
-    #f.write(" " + num_atom_types_and_mass[items] + " " +  num_atom_types_and_mass[items+1] + "\n")
-#f.write("\n")
-#f.write(atoms_header)
-#f.write("\n")
-
-
-#with open(output_data,'r') as atom_data:
-    #igot = atom_data.readlines()
-    #for line_raw in igot:
-        #f.write(line_raw)
-#f.close()

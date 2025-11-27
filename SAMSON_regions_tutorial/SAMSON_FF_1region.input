@@ -1,0 +1,55 @@
+log cantileverFF.init.log
+units real
+atom_style full
+boundary f f f    #fixed non-periodic
+
+bond_style morse
+angle_style harmonic 
+pair_style lj/cut 14  #For a single cantilever, this should be that important because this shouldn't be much self-interaction
+pair_modify mix geometric #the epsilon and sigma coefficients and cutoff distance for all of the lj/cut pair styles can be mixed. The default mix value is geometric.
+
+special_bonds lj 0.0 0.0 0.5 #C-C have a 0 lj interaction, C-C-C (two bonds) have a 0 lj interaction, C atoms sperated by two bonds have a 0.5 lj interaction
+
+# System definition
+read_data SAMSON_FF.lmpdat
+include C:\LAMMPS\regions\SAMSON_FF_paramV06.lammps 
+
+
+#define the anchor region
+region anchor block -9.717 4.687  -4.666 -2.916  6.64 19.571
+
+
+# set groups
+group free type 1 2
+group anchorgroup region anchor
+
+#Minimization
+minimize 1.0e-4 1.0e-6 1000 10000
+
+
+
+
+#generally do not contribute enough to justify calculating in large diamond crystal chunks
+dihedral_style none 
+improper_style none
+
+
+# Dynamics
+velocity free create 300 48455 mom yes rot yes
+#freeze the anchor atoms
+fix anchorfix anchorgroup setforce 0.0 0.0 0.0 #first is ID = user-assigned name for the fix,  ID of the group of atoms
+velocity anchorgroup set 0.0 0.0 0.0 #setforce deals only with accerlations, not velocities 
+fix nve all nve
+#fix noosehoover thermogroup nvt temp 6.0 6.0 100 # Nose-Hoover thermostat;when using a timestep of 1 fs, a damping parameter of 100 fs works well, will use this later
+timestep 0.1 #femtoseconds
+
+#apply force in X
+# Conversion Factors
+# 1 eV = 23.06035 kcal/mol
+# 1 nN = 1.602 eV/Angstrom = 1.602 / 23.06035 kcal/mol/ang = 0.0694
+# 30 atoms in the pull group
+
+
+dump dmp1 all custom 1000 cantilever_SASMSON_FF_P6.lammpstrj id type x y z 
+thermo 500  #match dump frequency if writing other data to the log that with be graphed
+run 125000 #femtoseconds
