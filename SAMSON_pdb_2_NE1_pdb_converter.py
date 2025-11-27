@@ -1,7 +1,7 @@
 #Here
-input_file = open('flyingH.pdb', 'r') 
+input_file = open('frame_out.pdb', 'r') 
 igot = input_file.readlines()
-f = open('flyingHNE1.pdb', "a") 
+f = open('frame_minimized.pdb', "a") 
 #this is the pdb version format
 #COLUMNS      DATA TYPE        FIELD      DEFINITION
 #------------------------------------------------------
